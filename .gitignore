@@ -1,0 +1,25 @@
+
+# Visual Studio local settings
+.vs/
+*.user
+*.suo
+
+# Build directories (including nested folders)
+**/x64/
+**/x86/
+**/Debug/
+**/Release/
+
+# Compiled files
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.pch
+
+# Intermediate build files
+*.idb
+*.ipch
+*.tlog
+*.lastbuildstate
