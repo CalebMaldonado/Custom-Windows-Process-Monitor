@@ -1,0 +1,43 @@
+name: Windows C++ CI
+
+# Start the pipeline when code is pushed or a Pull Request is opened.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Give the workflow read-only access to repository contents.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # GitHub provides a Windows build machine.
+    runs-on: windows-2025
+
+    steps:
+      # Step 1: Download the repository onto the build machine.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Find Visual Studio and compile the C++ project.
+      - name: Build C++ application
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+
+          $vsPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+
+          if (-not $vsPath) {
+            throw "Visual Studio C++ build tools were not found."
+          }
+
+          $msbuild = Join-Path $vsPath "MSBuild\Current\Bin\MSBuild.exe"
+
+          & $msbuild ".\FirstVisualStudioProject\FirstVisualStudioProject.vcxproj" /m /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
+
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
