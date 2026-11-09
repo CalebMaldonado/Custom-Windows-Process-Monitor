@@ -1,6 +1,5 @@
 name: Windows C++ CI
 
-# Start the pipeline when code is pushed or a Pull Request is opened.
 on:
   push:
     branches: [main]
@@ -8,21 +7,19 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Give the workflow read-only access to repository contents.
 permissions:
   contents: read
 
 jobs:
   build:
-    # GitHub provides a Windows build machine.
     runs-on: windows-2025
 
     steps:
-      # Step 1: Download the repository onto the build machine.
+      # 1. Download the repository onto the runner.
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      # Step 2: Find Visual Studio and compile the C++ project.
+      # 2. Locate MSBuild and compile the C++ application.
       - name: Build C++ application
         shell: pwsh
         run: |
@@ -36,8 +33,20 @@ jobs:
 
           $msbuild = Join-Path $vsPath "MSBuild\Current\Bin\MSBuild.exe"
 
-          & $msbuild ".\FirstVisualStudioProject\FirstVisualStudioProject.vcxproj" /m /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
+          $outputDir = Join-Path $env:GITHUB_WORKSPACE "output"
+          New-Item -ItemType Directory -Force $outputDir | Out-Null
+
+          & $msbuild ".\FirstVisualStudioProject\FirstVisualStudioProject.vcxproj" /m /p:Configuration=Release /p:Platform=x64 "/p:OutDir=$outputDir\" /verbosity:minimal
 
           if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE
           }
+
+      # 3. Preserve the executable as a downloadable artifact.
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Process-Monitor
+          path: output/*.exe
+          if-no-files-found: error
+          retention-days: 14
