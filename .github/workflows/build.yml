@@ -20,7 +20,7 @@ jobs:
     steps:
       # Step 1: Download the repository onto the build machine.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Find Visual Studio and compile the C++ project.
       - name: Build C++ application
