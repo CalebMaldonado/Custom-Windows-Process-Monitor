@@ -44,7 +44,7 @@ jobs:
 
       # 3. Preserve the executable as a downloadable artifact.
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Windows-Process-Monitor
           path: output/*.exe
