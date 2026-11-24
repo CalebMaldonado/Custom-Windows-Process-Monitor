@@ -23,6 +23,9 @@ constexpr int ID_LISTVIEW       = 101;
 constexpr int ID_REFRESH_BUTTON = 102;
 constexpr int ID_STATUS_TEXT    = 103;
 
+// FAKE secret for git/GitHub practice. Pretend this is a real API key that must never be pushed.
+
+
 // Handles ("HWND" = handle to a window) for the controls, so any function can use them.
 // In Win32, every button, label, and table is technically a small "window".
 HWND g_listView      = nullptr;
@@ -84,7 +87,9 @@ void LoadProcesses()
             count++;
         } while (Process32NextW(snapshot, &pe32));
 
-        std::wstring status = L"Processes running: " + std::to_wstring(count);
+        // Show only the first 8 characters of the key so we can see it is being used.
+        std::wstring status = L"Processes running: " + std::to_wstring(count)
+                            + L"   (key: " + std::wstring(API_SECRET_KEY).substr(0, 8) + L"...)";
         SetWindowTextW(g_statusText, status.c_str());
     }
     else {
