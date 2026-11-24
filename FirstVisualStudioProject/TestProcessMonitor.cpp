@@ -9,6 +9,7 @@
 #include <CommCtrl.h>   // "Common controls" such as the ListView table
 #include <TlHelp32.h>   // CreateToolhelp32Snapshot, Process32FirstW, Process32NextW
 #include <string>
+#include "secrets.h"
 
 // Tell the linker to include the common controls library.
 #pragma comment(lib, "Comctl32.lib")
